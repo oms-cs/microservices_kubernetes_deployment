@@ -10,14 +10,11 @@ import java.util.List;
 public interface BusRouteService {
 
     //fetch one, fetch all, add, update, delete
-
-    String doSomething();
-
     BusRouteVO addRoute(BusRouteVO busRoute);
 
     BusRouteVO updateRoute(BusRouteVO busRoute);
 
-    BusRouteVO deleteRoute(Long id);
+    void deleteRoute(Long id);
 
     BusRouteVO fetchRoute(Long id);
 

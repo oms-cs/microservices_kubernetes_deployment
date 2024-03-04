@@ -3,7 +3,7 @@ package com.busreservation.adminservice.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "bus_route_details_table")
+@Table(name = "bus_route_details_table", indexes = @Index(name = "brdt_idx", unique = true, columnList = "bus_number"))
 public class BusRoute {
 
     @Id

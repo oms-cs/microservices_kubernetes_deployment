@@ -1,10 +1,14 @@
 package com.busreservation.adminservice.service.impl;
 
+import com.busreservation.adminservice.exception.RouteAlreadyExists;
 import com.busreservation.adminservice.model.BusRoute;
 import com.busreservation.adminservice.repository.BusRouteRepository;
 import com.busreservation.adminservice.service.BusRouteService;
 import com.busreservation.adminservice.util.ObjectMapper;
 import com.busreservation.adminservice.valueobjects.BusRouteVO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,51 +17,62 @@ import java.util.List;
 @Service
 public class BusRouteServiceImpl implements BusRouteService {
 
+    private static final Logger log = LogManager.getLogger(BusRouteServiceImpl.class);
     private BusRouteRepository busRouteRepository;
-
-    private final WebClient.Builder webClientBuilder;
-
-    public BusRouteServiceImpl(BusRouteRepository busRouteRepository, WebClient.Builder webClientBuilder){
+    public BusRouteServiceImpl(BusRouteRepository busRouteRepository){
         this.busRouteRepository = busRouteRepository;
-        this.webClientBuilder = webClientBuilder;
     }
-
     @Override
     public BusRouteVO addRoute(BusRouteVO busRouteVO) {
-        BusRoute busRoute = busRouteRepository.save(ObjectMapper.voToEntity(busRouteVO));
+        log.info("BusRouteServiceImpl : addRoute.");
+        log.info("Add BusRoute {}.",busRouteVO);
+        BusRoute busRoute = null;
+        try {
+            busRoute = busRouteRepository.save(ObjectMapper.voToEntity(busRouteVO));
+        }catch(DataIntegrityViolationException e){
+            log.error("Bus Route [busNumber={}, source={}, destination={}] Already Exists!!",busRouteVO.busNumber(), busRouteVO.source(), busRouteVO.destination());
+            throw new RouteAlreadyExists("BusRoute [busNumber={"+busRouteVO.busNumber()+"}, source={"+busRouteVO.source()+"}, destination={"+busRouteVO.destination()+"}] Already Exists!! ");
+        }
+        log.info("Successfully Added BusRoute {} to Data",busRoute.getBusNumber());
         return ObjectMapper.entityToVO(busRoute);
     }
 
     @Override
     public BusRouteVO updateRoute(BusRouteVO busRouteVO) {
+        log.info("BusRouteServiceImpl : updateRoute.");
+        log.info("Update BusRoute {}.",busRouteVO);
         BusRoute getRouteData = busRouteRepository.findByBusNumber(busRouteVO.busNumber()).orElseThrow();
+        log.info("Bus Route Before Update From Data = {}",getRouteData);
         BusRoute routeUpdateData = ObjectMapper.mapForUpdate(busRouteVO, getRouteData);
-        return ObjectMapper.entityToVO(busRouteRepository.save(routeUpdateData));
+        var updatedRoute = ObjectMapper.entityToVO(busRouteRepository.save(routeUpdateData));
+        log.info("Updated Route = {}",updatedRoute);
+        return updatedRoute;
     }
 
     @Override
-    public String doSomething() {
-        String inventoryResponses = webClientBuilder.build().get()
-                .uri("http://inventory-service/api/v1/inventory/hello")
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        return inventoryResponses;
-    }
-
-    @Override
-    public BusRouteVO deleteRoute(Long id) {
-        return null;
+    public void deleteRoute(Long id) {
+        log.info("BusRouteServiceImpl : deleteRoute.");
+        log.info("Update BusRouteId {}.",id);
+        busRouteRepository.deleteById(id);
+        log.info("Successfully Deleted Bus Route {}.",id);
     }
 
     @Override
     public BusRouteVO fetchRoute(Long id) {
-        return null;
+        log.info("BusRouteServiceImpl : fetchRoute.");
+        log.info("Fetch BusRouteId {}.",id);
+        BusRoute fetchedRoute = busRouteRepository.findById(id).orElseThrow();
+        log.info("BusRoute Fetched for id {} = {}",id,fetchedRoute);
+        return ObjectMapper.entityToVO(fetchedRoute);
     }
 
     @Override
     public List<BusRouteVO> fetchAllRoutes() {
-        return null;
+        log.info("BusRouteServiceImpl : fetchAllRoutes.");
+        List<BusRoute> busRouteList = busRouteRepository.findAll();
+        log.info("BusRouteList = {}",busRouteList);
+        return busRouteList.stream()
+                .map(busRoute -> ObjectMapper.entityToVO(busRoute))
+                .toList();
     }
 }
