@@ -12,8 +12,7 @@ public record BusRouteVO(@NotBlank(message = "Bus Number is Mandatory!") String 
 
                          @NotBlank(message = "Destination is Mandatory!") String destination,
 
-                         @Min(value = 0l, message = "Invalid Fare, Should be Non-Negative, Non-Zero Number") Double fare,
-
-                         @Min(value = 0l, message = "Invalid Number")
-                         @Pattern(regexp = "[0-9]+ ") Integer totalSeats) {
+                         @Min(value = 0l, message = "Invalid Fare, Should be Non-Negative, Non-Zero Number")
+                         Double fare
+                         ) {
 }

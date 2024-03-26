@@ -17,6 +17,7 @@ public interface BusRouteService {
     void deleteRoute(Long id);
 
     BusRouteVO fetchRoute(Long id);
+    BusRouteVO fetchRoute(String busNumber);
 
     List<BusRouteVO> fetchAllRoutes();
 }

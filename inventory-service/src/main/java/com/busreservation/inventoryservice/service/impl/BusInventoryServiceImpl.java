@@ -7,9 +7,13 @@ import com.busreservation.inventoryservice.model.BusInventory;
 import com.busreservation.inventoryservice.model.dto.BusInventoryDto;
 import com.busreservation.inventoryservice.repository.BusInventoryRepository;
 import com.busreservation.inventoryservice.service.BusInventoryService;
+import com.busreservation.inventoryservice.util.KafkaProducer;
+import com.busreservation.inventoryservice.valueobjects.InventoryMessageVO;
+import com.busreservation.inventoryservice.valueobjects.PaymentMessageVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +26,11 @@ public class BusInventoryServiceImpl implements BusInventoryService {
 
     private BusInventoryRepository busInventoryRepository;
 
-    public  BusInventoryServiceImpl(BusInventoryRepository busInventoryRepository){
+    private KafkaProducer kafkaProducer;
+
+    public  BusInventoryServiceImpl(BusInventoryRepository busInventoryRepository, KafkaProducer kafkaProducer){
         this.busInventoryRepository = busInventoryRepository;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
@@ -91,5 +98,30 @@ public class BusInventoryServiceImpl implements BusInventoryService {
         }
         log.info("busInventoryList fetched = {}",busInventoryList);
         return busInventoryList;
+    }
+
+    @Override
+    @KafkaListener(topics = "${com.bus.reservation.mq.topic-name}", groupId = "${spring.kafka.consumer.group-id}")
+    public void updateInventoryPostPayment(PaymentMessageVO paymentMessageVO) {
+        log.info("BusInventoryServiceImpl : updateInventoryPostPayment");
+        log.info("updateInventoryPostPayment BusInventoryDto = ",paymentMessageVO);
+        Optional<BusInventory> savedBus = busInventoryRepository.findByBusNumber(paymentMessageVO.getBusNumber());
+        if(!savedBus.isPresent()){
+            log.error("Bus {} does not Exist. Failed to Updated DB",paymentMessageVO.getBusNumber());
+            throw new NotFoundException("Update Failed, Bus {"+paymentMessageVO.getBusNumber()+"} does not Exist!");
+        }
+        log.info("Saved Bus Data = {}",savedBus);
+        var updateBus = savedBus.get();
+        updateBus.setAvailableSeats(updateBus.getAvailableSeats() - paymentMessageVO.getNoOfSeats());
+        BusInventory updatedBus = busInventoryRepository.save(updateBus);
+
+        log.info("Inventory Updated After Successful Payment Processed, Publishing The status for Booking Service to Read. {}",updatedBus);
+        kafkaProducer
+                .sendInventoryUpdatedMessage(
+                        new InventoryMessageVO(
+                                  paymentMessageVO.getBookingNumber()
+                                , paymentMessageVO.getBusNumber()
+                                , paymentMessageVO.getPaymentStatus())
+                );
     }
 }

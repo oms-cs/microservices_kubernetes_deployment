@@ -3,6 +3,7 @@ package com.busreservation.adminservice.controller;
 
 import com.busreservation.adminservice.service.BusRouteService;
 import com.busreservation.adminservice.valueobjects.BusRouteVO;
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,13 @@ public class BusRouteController {
     private BusRouteService busRouteService;
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addBusRoute(BusRouteVO busRouteVO){
+    public ResponseEntity addBusRoute(@RequestBody @Valid BusRouteVO busRouteVO){
         log.info("User {} Accessed /add Endpoint ","Anonymous");
         return ResponseEntity.ok().body(busRouteService.addRoute(busRouteVO));
     }
 
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateusRoute(BusRouteVO busRouteVO){
+    public ResponseEntity updateRoute(@RequestBody @Valid BusRouteVO busRouteVO){
         log.info("User {} Accessed /add Endpoint ","Anonymous");
         return ResponseEntity.ok().body(busRouteService.updateRoute(busRouteVO));
     }
@@ -35,6 +36,12 @@ public class BusRouteController {
     public ResponseEntity getBusRoute(@PathVariable Long id){
         log.info("User {} Accessed /add Endpoint ","Anonymous");
         return ResponseEntity.ok().body(busRouteService.fetchRoute(id));
+    }
+
+    @GetMapping(value = "/route", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getBusRoute(@RequestParam String busNumber){
+        log.info("User {} Accessed /add Endpoint ","Anonymous");
+        return ResponseEntity.ok().body(busRouteService.fetchRoute(busNumber));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,6 +56,5 @@ public class BusRouteController {
         log.info("User {} Accessed /add Endpoint ","Anonymous");
         return ResponseEntity.ok().body(busRouteService.fetchAllRoutes());
     }
-
 
 }

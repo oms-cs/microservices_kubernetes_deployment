@@ -10,7 +10,6 @@ public class ObjectMapper {
         busRoute.setSource(busRouteVO.source());
         busRoute.setDestination(busRouteVO.destination());
         busRoute.setFare(busRouteVO.fare());
-        busRoute.setTotalSeats(busRouteVO.totalSeats());
         return busRoute;
     }
 
@@ -18,8 +17,7 @@ public class ObjectMapper {
         return new BusRouteVO(busRoute.getBusNumber(),
                 busRoute.getSource(),
                 busRoute.getDestination(),
-                busRoute.getFare(),
-                busRoute.getTotalSeats());
+                busRoute.getFare());
     }
 
     public static BusRoute mapForUpdate(BusRouteVO busRouteVO, BusRoute busRouteToBeUpdated){
@@ -34,9 +32,6 @@ public class ObjectMapper {
         }
         if(busRouteVO.fare() > 0d){
             busRouteToBeUpdated.setFare(busRouteVO.fare());
-        }
-        if(busRouteVO.totalSeats() > 0){
-            busRouteToBeUpdated.setTotalSeats(busRouteVO.totalSeats());
         }
         return busRouteToBeUpdated;
     }

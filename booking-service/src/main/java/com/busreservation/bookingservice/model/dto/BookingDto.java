@@ -3,6 +3,7 @@ package com.busreservation.bookingservice.model.dto;
 import com.busreservation.bookingservice.model.Booking;
 import com.busreservation.bookingservice.model.BookingStatus;
 import com.busreservation.bookingservice.model.Passenger;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -15,6 +16,8 @@ public class BookingDto {
     private String destination;
     private Integer numberOfSeats;
     private BookingStatus status;
+
+    @JsonIgnore
     private Set<Passenger> passengers;
 
 
@@ -95,5 +98,18 @@ public class BookingDto {
 
     public void setPassengers(Set<Passenger> passengers) {
         this.passengers = passengers;
+    }
+
+    @Override
+    public String toString() {
+        return "BookingDto{" +
+                "busNumber='" + busNumber + '\'' +
+                ", bookingDate=" + bookingDate +
+                ", source='" + source + '\'' +
+                ", destination='" + destination + '\'' +
+                ", numberOfSeats=" + numberOfSeats +
+                ", status=" + status +
+                ", passengers=" + passengers +
+                '}';
     }
 }

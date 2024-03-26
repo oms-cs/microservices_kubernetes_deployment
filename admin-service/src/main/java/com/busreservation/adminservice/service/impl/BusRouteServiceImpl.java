@@ -75,4 +75,13 @@ public class BusRouteServiceImpl implements BusRouteService {
                 .map(busRoute -> ObjectMapper.entityToVO(busRoute))
                 .toList();
     }
+
+    @Override
+    public BusRouteVO fetchRoute(String busNumber) {
+        log.info("BusRouteServiceImpl : fetchRoute.");
+        log.info("Fetch BusRouteId {}.",busNumber);
+        BusRoute fetchedRoute = busRouteRepository.findByBusNumber(busNumber).orElseThrow();
+        log.info("BusRoute Fetched for busNumber {} = {}",busNumber,fetchedRoute);
+        return ObjectMapper.entityToVO(fetchedRoute);
+    }
 }

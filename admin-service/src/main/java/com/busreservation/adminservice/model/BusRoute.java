@@ -22,17 +22,13 @@ public class BusRoute {
     @Column(name = "fare")
     private Double fare;
 
-    @Column(name = "total_available_seats")
-    private Integer totalSeats;
-
     public BusRoute(){}
 
-    public BusRoute(String busNumber, String source, String destination, Double fare, Integer totalSeats){
+    public BusRoute(String busNumber, String source, String destination, Double fare){
         this.busNumber = busNumber;
         this.source = source;
         this.destination = destination;
         this.fare = fare;
-        this.totalSeats = totalSeats;
     }
 
     public Long getId() {
@@ -75,11 +71,4 @@ public class BusRoute {
         this.fare = fare;
     }
 
-    public Integer getTotalSeats() {
-        return totalSeats;
-    }
-
-    public void setTotalSeats(Integer totalSeats) {
-        this.totalSeats = totalSeats;
-    }
 }

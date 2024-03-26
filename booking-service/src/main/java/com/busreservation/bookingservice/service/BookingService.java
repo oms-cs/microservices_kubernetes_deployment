@@ -8,13 +8,13 @@ import java.util.List;
 @Component
 public interface BookingService {
 
-    Booking addBooking(Booking booking);
+    Booking   createReservation(Booking booking);
 
-    Booking deleteBooking(String bookingNumber);
+    void deleteBooking(String bookingNumber);
 
     List<Booking> fetchAllBooking();
 
     Booking fetchBooking(String bookingNumber);
 
-    Booking updateBooking(String booking);
+    Booking updateBooking(Booking booking);
 }

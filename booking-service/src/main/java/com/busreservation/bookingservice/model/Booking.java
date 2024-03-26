@@ -1,6 +1,7 @@
 package com.busreservation.bookingservice.model;
 
 import com.busreservation.bookingservice.model.dto.BookingDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
+@Table(name = "online_reservation_details_table", indexes = @Index(name = "idx_ordt",columnList = "booking_number, bus_number"))
 public class Booking implements Serializable {
     //booking number, bus number, booking date, source, destinations, number of seats, status
     @Id
@@ -29,8 +31,9 @@ public class Booking implements Serializable {
     private Integer numberOfSeats;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
-    @OneToMany(mappedBy = "booking")
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private Set<Passenger> passengers;
 
     public Booking() {
@@ -123,5 +126,19 @@ public class Booking implements Serializable {
 
     public void setPassengers(Set<Passenger> passengers) {
         this.passengers = passengers;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingNumber='" + bookingNumber + '\'' +
+                ", busNumber='" + busNumber + '\'' +
+                ", bookingDate=" + bookingDate +
+                ", source='" + source + '\'' +
+                ", destination='" + destination + '\'' +
+                ", numberOfSeats=" + numberOfSeats +
+                ", status=" + status +
+                ", passengers=" + passengers +
+                '}';
     }
 }
