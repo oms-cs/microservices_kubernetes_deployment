@@ -25,13 +25,15 @@
 
     <Loggers>
         <!-- LOG everything at INFO level -->
-        <Root level="info">
+        <Root level="error">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Root>
 
         <!-- LOG "com.busreservation.inventoryservice*" at Info level -->
         <Logger name="com.busreservation.inventoryservice" level="info"></Logger>
+        <Logger name="org.springframework.kafka" level="info"></Logger>
+
     </Loggers>
 
 </Configuration>

@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+#        git:
+#          uri: https://github.com/{username}/{reponame}
+#          username: 
+#          password: 
+#          skipSslValidation: true
+  profiles:
+     active: native
+  application:
+    name: config-server
+server:
+  port: 8888

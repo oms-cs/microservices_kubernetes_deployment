@@ -30,8 +30,8 @@
             <AppenderRef ref="RollingFile" />
         </Root>
 
-        <!-- LOG "com.busreservation.adminservice*" at Info level -->
-        <Logger name="com.busreservation.adminservice" level="info"></Logger>
+        <!-- LOG "com.busreservation.bookingservice*" at Info level -->
+        <Logger name="com.busreservation.inventoryservice" level="info"></Logger>
     </Loggers>
 
 </Configuration>

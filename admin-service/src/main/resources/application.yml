@@ -1,0 +1,36 @@
+app:
+  eureka-server: localhost
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+server:
+  port: 8082
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
+  application:
+    name: admin-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: pass@123
+    url: jdbc:mysql://localhost:3306/admin-service
+    username: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      
+# Actuator Prometheus Endpoint
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

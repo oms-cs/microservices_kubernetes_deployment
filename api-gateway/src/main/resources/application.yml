@@ -1,0 +1,53 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway:
+            route:
+              RouteDefinionLocator: INFO
+    root: INFO
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: booking-service
+        predicates:
+        - Path=/api/v1/booking/**
+        uri: lb://booking-service
+      - id: admin-service
+        predicates:
+        - Path=/api/v1/routes/**
+        uri: lb://admin-service
+      - id: inventory-service
+        predicates:
+        - Path=/api/v1/inventory/**
+        uri: lb://INVENTORY-SERVICE
+      - id: service-registry
+        predicates:
+        - Path=/eureka/web
+        uri: http://localhost:8761
+      - id: discovery-server-static
+        predicates:
+        - Path=/eureka/**
+        uri: http://localhost:8761
+      - id: payment-service
+        predicates:
+        - Path=/api/v1/payment/**
+        uri: lb://payment-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
