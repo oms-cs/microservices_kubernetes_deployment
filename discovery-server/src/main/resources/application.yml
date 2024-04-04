@@ -3,6 +3,6 @@ eureka:
     fetchRegistry: false
     registerWithEureka: false
   instance:
-    hostname: localhost
+    hostname: discovery-server
 server:
   port: 8761

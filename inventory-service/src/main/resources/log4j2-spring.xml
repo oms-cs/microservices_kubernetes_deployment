@@ -6,9 +6,57 @@
                     pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable" />
         </Console>
 
-        <RollingFile name="RollingFile"
-                     fileName="./logs/spring-boot-logger-log4j2.log"
-                     filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-%d{-dd-MMMM-yyyy}-%i.log.gz">
+        <RollingFile name="ErrorLogs"
+                     fileName="./logs/application_error.log"
+                     filePattern="./logs/$${date:yyyy-MM}/application_error-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    10 MegaBytes -->
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy
+                        size="10 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        
+        <RollingFile name="DebugLogs"
+                     fileName="./logs/application_debug.log"
+                     filePattern="./logs/$${date:yyyy-MM}/application_debug-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    10 MegaBytes -->
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy
+                        size="10 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        
+        <RollingFile name="SysoutsLogs"
+                     fileName="./logs/application_sysouts.log"
+                     filePattern="./logs/$${date:yyyy-MM}/application_sysouts-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    10 MegaBytes -->
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy
+                        size="10 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        
+        <RollingFile name="KafkaLogs"
+                     fileName="./logs/application_kafka.log"
+                     filePattern="./logs/$${date:yyyy-MM}/application_kafka-%d{-dd-MMMM-yyyy}-%i.log.gz">
             <PatternLayout>
                 <pattern>%d %p %C{1.} [%t] %m%n</pattern>
             </PatternLayout>
@@ -25,15 +73,22 @@
 
     <Loggers>
         <!-- LOG everything at INFO level -->
-        <Root level="error">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+        <Root level="info">
+            <AppenderRef ref="SysoutsLogs" />
         </Root>
 
-        <!-- LOG "com.busreservation.inventoryservice*" at Info level -->
-        <Logger name="com.busreservation.inventoryservice" level="info"></Logger>
-        <Logger name="org.springframework.kafka" level="info"></Logger>
-
+        <!-- LOG "com.busreservation.auth*" at Info level -->
+        <Logger name="com.busreservation" level="info">
+			<AppenderRef ref="DebugLogs" />
+		</Logger>
+        <!-- LOG "com.busreservation*" at Info level -->
+        <Logger name="com.busreservation" level="error">
+			<AppenderRef ref="Console" />
+		</Logger>
+        <!-- LOG "org.springframework.kafka" at Info level -->
+        <Logger name="org.springframework.kafka" level="info">
+			<AppenderRef ref="KafkaLogs" />
+		</Logger>
     </Loggers>
 
 </Configuration>

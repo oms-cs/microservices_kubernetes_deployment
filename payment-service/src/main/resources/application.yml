@@ -12,6 +12,8 @@ eureka:
 server:
   port: 8084
 spring:
+  profiles:
+    active: prod
   security:
     oauth2:
       resourceserver:

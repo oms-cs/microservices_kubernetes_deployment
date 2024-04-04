@@ -1,0 +1,27 @@
+cors:
+  allowed-headers: '*'
+  allowed-methods: OPTIONS,GET,POST,PUT,DELETE
+  cors-config: /**
+server:
+  port: 9000
+spring:
+  auth:
+    server:
+      client-id: client
+      client-secret: secret
+      redirect-url: http://localhost:9000/oauth/callback
+#      issuer-uri: http://localhost:9000
+  application:
+    name: auth-server
+  profiles:
+    active: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: pass@123
+    url: jdbc:mysql://localhost:3306/algosneakers
+    username: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update

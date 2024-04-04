@@ -1,0 +1,27 @@
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: http://kafka:9092
+    producer:
+      bootstrap-servers: http://kafka:9092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-service:9000
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: parth
+    password: root
+    url: jdbc:postgresql://inventory-db-service:5434/inventory-db
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+app:
+  eureka-server: discovery-server
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka

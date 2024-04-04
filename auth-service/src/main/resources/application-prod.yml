@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: parth
+    password: root
+    url: jdbc:postgresql://auth-db-service:5436/auth-db
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+  auth:
+    server:
+      client-id: client
+      client-secret: secret
+      redirect-url: http://localhost:9000/oauth/callback
+      issuer-uri: http://localhost:9000
+app:
+  eureka-server: discovery-server
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka
