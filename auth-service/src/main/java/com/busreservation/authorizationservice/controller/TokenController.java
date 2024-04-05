@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +26,14 @@ public class TokenController {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    public static String clientId = "client";
-    public static String clientSecret = "secret";
-    public static String redirectUri = "http://localhost:9000/oauth/callback";
+    @Value("${spring.auth.server.client-id}")
+    private String clientId;
+    
+    @Value("${spring.auth.server.client-secret}")
+    private String clientSecret;
+    
+    @Value("${spring.auth.server.redirect-url}")
+    private String redirectUri;
 
     public static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,10 +48,12 @@ public class TokenController {
         return "This is a Public Endpoint";
     }
 
-    @GetMapping("/oauth/callback")
+    @GetMapping("/oauth2/callback")
     public String oAuthCallBack(String code) throws JsonMappingException, JsonProcessingException {
         System.out.println("code == "+code);
-        var creds = Base64.getEncoder().encodeToString((clientId + ":"  + clientSecret).getBytes());
+        
+        var creds = Base64
+        		.getEncoder().encodeToString((clientId + ":"  + clientSecret).getBytes());
         var payload = new LinkedMultiValueMap<String, String>();
         payload.add("code", code);
         payload.add("grant_type", "authorization_code");

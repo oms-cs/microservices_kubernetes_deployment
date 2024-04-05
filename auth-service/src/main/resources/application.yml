@@ -9,8 +9,8 @@ spring:
     server:
       client-id: client
       client-secret: secret
-      redirect-url: http://localhost:9000/oauth/callback
-#      issuer-uri: http://localhost:9000
+      redirect-url: http://192.168.1.12:3001/oauth2/callback
+#      redirect-url: http://localhost:9000/oauth2/callback
   application:
     name: auth-server
   profiles:

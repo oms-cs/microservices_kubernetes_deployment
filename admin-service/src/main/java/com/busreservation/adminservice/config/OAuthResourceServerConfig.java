@@ -25,8 +25,7 @@ public class OAuthResourceServerConfig {
                 .cors(corsSpec -> corsSpec.disable())
                 .authorizeHttpRequests(authorizer -> {
                     authorizer.requestMatchers(WHITE_LIST_URLS).permitAll();
-                    authorizer.anyRequest().permitAll();
-//                    authorizer.anyRequest().authenticated();
+                    authorizer.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(Customizer.withDefaults()))
                 .build();

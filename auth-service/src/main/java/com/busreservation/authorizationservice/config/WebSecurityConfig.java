@@ -22,7 +22,11 @@ public class WebSecurityConfig {
     private static UserRegistrationService userRegistrationService;
 
     private static final Integer ENCODER_STRENGTH = 10;
-    private static final String[] WHITE_LIST_URIS = {"/api/v1/auth/**","/oauth/callback","/oauth2/token"};
+    private static final String[] WHITE_LIST_URIS = {
+    		"/api/v1/auth/**"
+    		,"/oauth2/callback"
+    		,"/oauth2/token"
+    		,"/.well-known/*"};
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(ENCODER_STRENGTH);

@@ -13,8 +13,7 @@ spring:
     server:
       client-id: client
       client-secret: secret
-      redirect-url: http://localhost:9000/oauth/callback
-      issuer-uri: http://localhost:9000
+      redirect-url: http://client-service:3000/oauth2/callback
 app:
   eureka-server: discovery-server
 eureka:
